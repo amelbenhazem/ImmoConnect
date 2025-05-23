@@ -1,0 +1,44 @@
+@model ImmoConnect_BE.Models.BienImmobilier
+
+@{
+    ViewData["Title"] = "Détails du bien immobilier";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Détails du bien immobilier</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @if (!string.IsNullOrEmpty(Model.Image_url))
+                    {
+                        <img src="@Model.Image_url" class="img-fluid rounded" alt="@Model.Titre">
+                    }
+                    else
+                    {
+                        <img src="https://via.placeholder.com/600x400?text=Pas+d'image" class="img-fluid rounded" alt="Aucune image disponible">
+                    }
+                </div>
+                <div class="col-md-6">
+                    <h3>@Model.Titre</h3>
+                    <p><strong>Prix:</strong> @Model.Prix.ToString("C")</p>
+                    <p><strong>Adresse:</strong> @Model.Adresse</p>
+                    <p><strong>Catégorie:</strong> @(Model.Categorie?.Nom ?? "N/A")</p>
+                    <p><strong>Statut:</strong> @Model.Statut</p>
+                    <p><strong>Date d'ajout:</strong> @Model.Date_ajout.ToString("dd/MM/yyyy")</p>
+                    <hr>
+                    <h4>Description</h4>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group">
+                <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+                <a asp-controller="DemandesVisite" asp-action="Create" asp-route-bienId="@Model.Id_bien" class="btn btn-primary">Demander une visite</a>
+            </div>
+        </div>
+    </div>
+</div> 

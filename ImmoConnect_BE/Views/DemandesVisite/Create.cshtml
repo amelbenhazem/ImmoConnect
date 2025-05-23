@@ -1,0 +1,77 @@
+@model ImmoConnect_BE.Models.DemandeVisite
+
+@{
+    ViewData["Title"] = "Nouvelle demande de visite";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Nouvelle demande de visite</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                @if (ViewBag.BienId != null)
+                {
+                    <input type="hidden" asp-for="Id_bien" value="@ViewBag.BienId" />
+                    <div class="mb-3">
+                        <label class="form-label">Bien immobilier</label>
+                        <input type="text" class="form-control" value="@ViewBag.BienTitre" readonly />
+                        <span asp-validation-for="Id_bien" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <label asp-for="Id_bien" class="form-label">Bien immobilier</label>
+                        <select asp-for="Id_bien" class="form-select" asp-items="@(new SelectList(ViewBag.Biens, "Id_bien", "Titre"))">
+                            <option value="">-- Sélectionner un bien --</option>
+                        </select>
+                        <span asp-validation-for="Id_bien" class="text-danger"></span>
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label asp-for="Nom_client" class="form-label">Nom</label>
+                    <input asp-for="Nom_client" class="form-control" />
+                    <span asp-validation-for="Nom_client" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email_client" class="form-label">Email</label>
+                    <input asp-for="Email_client" class="form-control" type="email" />
+                    <span asp-validation-for="Email_client" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Date_souhaitee" class="form-label">Date souhaitée</label>
+                    <input asp-for="Date_souhaitee" class="form-control" type="date" />
+                    <span asp-validation-for="Date_souhaitee" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Heure_demande" class="form-label">Heure souhaitée</label>
+                    <input asp-for="Heure_demande" class="form-control" type="time" />
+                    <span asp-validation-for="Heure_demande" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Message" class="form-label">Message</label>
+                    <textarea asp-for="Message" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

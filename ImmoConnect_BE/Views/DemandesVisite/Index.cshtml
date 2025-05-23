@@ -1,0 +1,63 @@
+@model IEnumerable<ImmoConnect_BE.Models.DemandeVisite>
+
+@{
+    ViewData["Title"] = "Liste des demandes de visite";
+}
+
+<div class="container mt-4">
+    <h2>Liste des demandes de visite</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="searchString" class="form-label">Recherche</label>
+                    <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Nom, email ou message...">
+                </div>
+                <div class="col-md-3">
+                    <label for="dateDebut" class="form-label">Date début</label>
+                    <input type="date" name="dateDebut" value="@(ViewBag.DateDebut?.ToString("yyyy-MM-dd"))" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label for="dateFin" class="form-label">Date fin</label>
+                    <input type="date" name="dateFin" value="@(ViewBag.DateFin?.ToString("yyyy-MM-dd"))" class="form-control">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Nom_client</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@item.Email_client</h6>
+                        <p class="card-text">
+                            <strong>Bien :</strong> @item.BienImmobilier.Titre<br>
+                            <strong>Date souhaitée :</strong> @item.Date_souhaitee.ToString("dd/MM/yyyy")<br>
+                            <strong>Date de demande :</strong> @item.Date_demande.ToString("dd/MM/yyyy HH:mm")<br>
+                            <strong>Message :</strong> @item.Message
+                        </p>
+                        <div class="btn-group">
+                            <a asp-action="Details" asp-route-id="@item.Id_demande" class="btn btn-info">Détails</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id_demande" class="btn btn-warning">Modifier</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id_demande" class="btn btn-danger">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Aucune demande de visite trouvée.
+        </div>
+    }
+</div> 

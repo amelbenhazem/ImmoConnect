@@ -1,0 +1,46 @@
+@model ImmoConnect_BE.Models.DemandeVisite
+
+@{
+    ViewData["Title"] = "Supprimer la demande de visite";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Supprimer la demande de visite</h2>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <h4>Êtes-vous sûr de vouloir supprimer cette demande de visite ?</h4>
+            </div>
+
+            <dl class="row">
+                <dt class="col-sm-3">Nom du client</dt>
+                <dd class="col-sm-9">@Model.Nom_client</dd>
+
+                <dt class="col-sm-3">Email du client</dt>
+                <dd class="col-sm-9">@Model.Email_client</dd>
+
+                <dt class="col-sm-3">Bien immobilier</dt>
+                <dd class="col-sm-9">@Model.BienImmobilier.Titre</dd>
+
+                <dt class="col-sm-3">Date souhaitée</dt>
+                <dd class="col-sm-9">@Model.Date_souhaitee.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3">Date de demande</dt>
+                <dd class="col-sm-9">@Model.Date_demande.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt class="col-sm-3">Message</dt>
+                <dd class="col-sm-9">@Model.Message</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id_demande" />
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

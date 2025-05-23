@@ -1,0 +1,135 @@
+@model ImmoConnect_BE.ViewModel.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Tableau de bord administrateur";
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Tableau de bord administrateur</h1>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Utilisateurs</h5>
+                    <h2 class="card-text">@Model.TotalUsers</h2>
+                    <a asp-action="Users" class="text-white">Voir tous les utilisateurs</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Biens immobiliers</h5>
+                    <h2 class="card-text">@Model.TotalProperties</h2>
+                    <a asp-action="Properties" class="text-white">Voir tous les biens</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Catégories</h5>
+                    <h2 class="card-text">@Model.TotalCategories</h2>
+                    <a asp-action="Categories" class="text-white">Voir toutes les catégories</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Demandes de visite</h5>
+                    <h2 class="card-text">@Model.TotalVisitRequests</h2>
+                    <a asp-action="VisitRequests" class="text-white">Voir toutes les demandes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biens immobiliers récents -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Biens immobiliers récents</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Prix</th>
+                            <th>Catégorie</th>
+                            <th>Propriétaire</th>
+                            <th>Date d'ajout</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var property in Model.RecentProperties)
+                        {
+                            <tr>
+                                <td>@property.Titre</td>
+                                <td>@property.Prix.ToString("C")</td>
+                                <td>@property.Categorie?.Nom</td>
+                                <td>@property.Utilisateur?.Nom @property.Utilisateur?.Prenom</td>
+                                <td>@property.Date_ajout.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a asp-controller="BiensImmobiliers" asp-action="Edit" asp-route-id="@property.Id_bien" class="btn btn-sm btn-primary">Modifier</a>
+                                    <a asp-controller="BiensImmobiliers" asp-action="Details" asp-route-id="@property.Id_bien" class="btn btn-sm btn-info">Détails</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demandes de visite récentes -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Demandes de visite récentes</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Bien immobilier</th>
+                            <th>Client</th>
+                            <th>Date souhaitée</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var request in Model.RecentVisitRequests)
+                        {
+                            <tr>
+                                <td>@request.BienImmobilier?.Titre</td>
+                                <td>@request.Nom_client</td>
+                                <td>@request.Date_souhaitee.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge bg-@(request.Statut switch {
+                                        "En attente" => "warning",
+                                        "Acceptée" => "success",
+                                        "Refusée" => "danger",
+                                        "Terminée" => "info",
+                                        _ => "secondary"
+                                    })">
+                                        @request.Statut
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-controller="DemandesVisite" asp-action="Edit" asp-route-id="@request.Id_demande" class="btn btn-sm btn-primary">Modifier</a>
+                                    <a asp-controller="DemandesVisite" asp-action="Details" asp-route-id="@request.Id_demande" class="btn btn-sm btn-info">Détails</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> 

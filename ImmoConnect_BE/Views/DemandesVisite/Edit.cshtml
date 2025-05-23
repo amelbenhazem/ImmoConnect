@@ -1,0 +1,59 @@
+@model ImmoConnect_BE.Models.DemandeVisite
+
+@{
+    ViewData["Title"] = "Modifier la demande de visite";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Modifier la demande de visite</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id_demande" />
+                <input type="hidden" asp-for="Date_demande" />
+
+                <div class="mb-3">
+                    <label asp-for="Id_bien" class="form-label">Bien immobilier</label>
+                    <input type="text" class="form-control" value="@Model.BienImmobilier.Titre" readonly />
+                    <input type="hidden" asp-for="Id_bien" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Nom_client" class="form-label">Nom</label>
+                    <input asp-for="Nom_client" class="form-control" />
+                    <span asp-validation-for="Nom_client" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email_client" class="form-label">Email</label>
+                    <input asp-for="Email_client" class="form-control" type="email" />
+                    <span asp-validation-for="Email_client" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Date_souhaitee" class="form-label">Date souhaitée</label>
+                    <input asp-for="Date_souhaitee" class="form-control" type="date" />
+                    <span asp-validation-for="Date_souhaitee" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Message" class="form-label">Message</label>
+                    <textarea asp-for="Message" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

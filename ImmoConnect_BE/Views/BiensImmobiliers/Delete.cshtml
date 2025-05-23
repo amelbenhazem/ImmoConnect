@@ -1,0 +1,81 @@
+@model ImmoConnect_BE.Models.BienImmobilier
+
+@{
+    ViewData["Title"] = "Supprimer le bien immobilier";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Supprimer le bien immobilier</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="text-danger">Êtes-vous sûr de vouloir supprimer ce bien immobilier ?</h4>
+            <hr />
+            <dl class="row">
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Titre)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Titre)
+                </dd>
+                 <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Prix)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Prix)
+                </dd>
+                 <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Adresse)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Adresse)
+                </dd>
+                 <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Statut)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Statut)
+                </dd>
+                 <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Categorie)
+                </dt>
+                <dd class = "col-sm-8">
+                    @(Model.Categorie?.Nom ?? "N/A")
+                </dd>
+                 <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Utilisateur)
+                </dt>
+                <dd class = "col-sm-8">
+                    @(Model.Utilisateur?.Nom + " " + Model.Utilisateur?.Prenom ?? "N/A")
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Image_url)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Image_url)
+                </dd>
+                 <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Date_ajout)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Date_ajout)
+                </dd>
+            </dl>
+
+            <form asp-action="DeleteConfirmed">
+                <input type="hidden" asp-for="Id_bien" />
+                <div class="btn-group">
+                     <input type="submit" value="Supprimer" class="btn btn-danger" />
+                    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

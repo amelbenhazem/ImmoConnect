@@ -1,0 +1,115 @@
+/* Ajoutez ces variables CSS pour votre palette de couleurs */
+:root {
+    --primary-color: #007bff; /* Bleu */
+    --secondary-color: #6c757d; /* Gris */
+    --success-color: #28a745; /* Vert */
+    --danger-color: #dc3545; /* Rouge */
+    --warning-color: #ffc107; /* Jaune */
+    --info-color: #17a2b8; /* Cyan */
+    --light-color: #f8f9fa; /* Clair */
+    --dark-color: #343a40; /* Sombre */
+    --white-color: #fff;
+}
+
+/* Styles de base pour tous les boutons */
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: var(--dark-color);
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+/* Styles pour les différents types de boutons */
+.btn-primary {
+    color: var(--white-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    color: var(--white-color);
+    background-color: #0056b3; /* Un bleu légèrement plus foncé */
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    color: var(--white-color);
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    color: var(--white-color);
+    background-color: #545b62; /* Un gris légèrement plus foncé */
+    border-color: #545b62;
+}
+
+.btn-success {
+    color: var(--white-color);
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-success:hover {
+    color: var(--white-color);
+    background-color: #218838; /* Un vert légèrement plus foncé */
+    border-color: #218838;
+}
+
+.btn-danger {
+    color: var(--white-color);
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+    color: var(--white-color);
+    background-color: #c82333; /* Un rouge légèrement plus foncé */
+    border-color: #c82333;
+}
+
+.btn-outline-danger {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.btn-outline-danger:hover {
+    color: var(--white-color);
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+/* Ajoutez d'autres styles de boutons (warning, info, light, dark) si nécessaire */
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}

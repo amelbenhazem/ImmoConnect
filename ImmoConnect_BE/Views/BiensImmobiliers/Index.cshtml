@@ -1,0 +1,156 @@
+@model IEnumerable<ImmoConnect_BE.Models.BienImmobilier>
+
+@{
+    ViewData["Title"] = "Nos biens immobiliers";
+}
+
+<style>
+    .property-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .property-card .card-body h5 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .property-card .card-body p {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .property-card .card-footer {
+        background-color: transparent;
+        border-top: none;
+    }
+
+    .property-card .status-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1;
+        padding: .35em .65em;
+        font-size: .75em;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25rem;
+    }
+
+     .status-badge.bg-success { background-color: #28a745 !important; }
+     .status-badge.bg-warning { background-color: #ffc107 !important; }
+     .status-badge.bg-danger { background-color: #dc3545 !important; }
+     /* Ajoutez d'autres styles de badge si nécessaire */
+
+      .filter-form .form-control, .filter-form .form-select {
+          border-radius: 0.25rem;
+      }
+
+       .filter-form .btn {
+           border-radius: 0.25rem;
+       }
+
+        .filter-form label {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+</style>
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1>Nos biens immobiliers</h1>
+        <p class="lead">Trouvez le bien qui correspond à vos attentes</p>
+    </div>
+
+    <div class="card mb-4 filter-form">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3 align-items-end">
+                <div class="col-md">
+                    <label class="form-label visually-hidden">Recherche par titre, description ou adresse...</label>
+                    <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Rechercher par titre, description ou adresse...">
+                </div>
+                 <div class="col-md-auto">
+                    <label class="form-label">Catégorie</label>
+                    <select name="categorieId" class="form-select" asp-items="@(new SelectList(ViewBag.Categories, "Id_categorie", "Nom", ViewBag.CategorieId))">
+                        <option value="">Toutes les catégories</option>
+                    </select>
+                </div>
+                <div class="col-md-auto">
+                     <label class="form-label">Statut</label>
+                     <select name="statut" class="form-select" >
+                          <option value="">Tous les statuts</option>
+                           <option value="Disponible" selected="@(ViewBag.Statut == "Disponible")">Disponible</option>
+                           <option value="Réservé" selected="@(ViewBag.Statut == "Réservé")">Réservé</option>
+                           <option value="Vendu" selected="@(ViewBag.Statut == "Vendu")">Vendu</option>
+                     </select>
+                </div>
+                <div class="col-md-auto">
+                    <label class="form-label">Prix Min</label>
+                    <input type="number" name="minPrix" value="@ViewBag.MinPrix" class="form-control" placeholder="0">
+                </div>
+                <div class="col-md-auto">
+                    <label class="form-label">Prix Max</label>
+                    <input type="number" name="maxPrix" value="@ViewBag.MaxPrix" class="form-control" placeholder="1000000">
+                </div>
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                </div>
+                 <div class="col-md-auto">
+                     <a asp-action="Index" class="btn btn-secondary">Réinitialiser</a>
+                 </div>
+            </form>
+        </div>
+    </div>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success">Ajouter un nouveau bien</a>
+    </p>
+    <p>@Model.Count() bien(s) trouvé(s)</p>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 property-card">
+                     <span class="status-badge bg-@(item.Statut switch {
+                                        "Disponible" => "success",
+                                        "Réservé" => "warning",
+                                        "Vendu" => "danger",
+                                        _ => "secondary"
+                                    })">
+                                        @item.Statut
+                                    </span>
+                    @if (!string.IsNullOrEmpty(item.Image_url))
+                    {
+                        <img src="@item.Image_url" class="card-img-top" alt="@item.Titre">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Titre</h5>
+                         @* Afficher seulement les premières lignes de la description ? *@
+                        <p class="card-text">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
+                        <ul class="list-unstyled">
+                            <li><strong>Prix:</strong> @item.Prix.ToString("C")</li>
+                            <li><strong>Adresse:</strong> @item.Adresse</li>
+                            @* Affichez d'autres détails pertinents comme dans l'image si besoin *@
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100">
+                            <a asp-action="Details" asp-route-id="@item.Id_bien" class="btn btn-sm btn-info">Détails</a>
+                            @* N'affichez Modifier/Supprimer que si l'utilisateur a les droits nécessaires, par exemple s'il est l'utilisateur ou un admin *@
+                            @if (User.Identity.IsAuthenticated && (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == item.Id_utilisateur.ToString()))
+                            {
+                                 <a asp-action="Edit" asp-route-id="@item.Id_bien" class="btn btn-sm btn-warning">Modifier</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id_bien" class="btn btn-sm btn-danger">Supprimer</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

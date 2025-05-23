@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Accueil";
+}
+@model IEnumerable<ImmoConnect_BE.Models.BienImmobilier>
+
+
+<style>
+
+    .property-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .property-card .card-body h5 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .property-card .card-body p {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .property-card .card-footer {
+        background-color: transparent;
+        border-top: none;
+    }
+
+    .property-card .status-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1;
+        padding: .35em .65em;
+        font-size: .75em;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25rem;
+    }
+
+    .status-badge.bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .status-badge.bg-warning {
+        background-color: #ffc107 !important;
+    }
+
+    .status-badge.bg-danger {
+        background-color: #dc3545 !important;
+    }
+    .hero-section {
+        position: relative;
+        width: 100%;
+        height: 60vh; /* Ajustez la hauteur selon vos préférences */
+        background: url('https://res.cloudinary.com/df8wlumcl/image/upload/v1747914708/ybcfu6r5juuwaxifbww9.jpg') no-repeat center center;
+        background-size: cover;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Assombrir l'image pour une meilleure lisibilité du texte */
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .search-bar-container {
+        background-color: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent pour la barre de recherche */
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .search-bar-container .form-control, .search-bar-container .form-select {
+        border: none;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="display-4">Trouvez le bien immobilier de vos rêves</h1>
+        <p class="lead">Des milliers de biens à vendre et à louer partout</p>
+        <div class="container search-bar-container">
+            <form asp-controller="BiensImmobiliers" asp-action="Index" method="get">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <select name="category" class="form-select">
+                            <option value="">Tous les types</option>
+                            @* Ajoutez ici les options de catégorie si nécessaire, potentiellement depuis ViewBag *@
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="searchString" class="form-control" placeholder="Ville, code postal, adresse..." />
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success w-100">Rechercher</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Vous pouvez ajouter d'autres sections ici en dessous du hero-section si nécessaire *@
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Biens immobiliers</h5>
+                <p class="card-text">Consultez et gérez vos biens immobiliers.</p>
+                <a asp-controller="BiensImmobiliers" asp-action="Index" class="btn btn-primary">Voir les biens</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Demandes de visite</h5>
+                <p class="card-text">Gérez les demandes de visite pour vos biens.</p>
+                <a asp-controller="DemandesVisite" asp-action="Index" class="btn btn-primary">Voir les demandes</a>
+            </div>
+        </div>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Administration</h5>
+                    <p class="card-text">Gérez les utilisateurs et les paramètres du site.</p>
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary">Administration</a>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container mt-5">
+    <h2 class="text-center mb-4">Biens récents</h2>
+    <div class="row">
+        @if (Model != null)
+{
+        @foreach (var item in Model.Take(6)) 
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 property-card">
+                    <span class="status-badge bg-@(item.Statut switch {
+                        "Disponible" => "success",
+                        "Réservé" => "warning",
+                        "Vendu" => "danger",
+                        _ => "secondary"
+                    })">@item.Statut</span>
+
+                    @if (!string.IsNullOrEmpty(item.Image_url))
+                    {
+                        <img src="@item.Image_url" class="card-img-top" alt="@item.Titre">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Titre</h5>
+                        <p class="card-text">@(item.Description?.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
+                        <ul class="list-unstyled">
+                            <li><strong>Prix:</strong> @item.Prix.ToString("C")</li>
+                            <li><strong>Adresse:</strong> @item.Adresse</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100">
+                            <a asp-controller="BiensImmobiliers" asp-action="Details" asp-route-id="@item.Id_bien" class="btn btn-sm btn-info">Détails</a>
+                            @if (User.Identity.IsAuthenticated && (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == item.Id_utilisateur.ToString() || User.IsInRole("Admin")))
+                            {
+                                <a asp-controller="BiensImmobiliers" asp-action="Edit" asp-route-id="@item.Id_bien" class="btn btn-sm btn-warning">Modifier</a>
+                                <a asp-controller="BiensImmobiliers" asp-action="Delete" asp-route-id="@item.Id_bien" class="btn btn-sm btn-danger">Supprimer</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        }
+else
+{
+    <p>Aucun élément à afficher.</p>
+}
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="BiensImmobiliers" asp-action="IndexA" class="btn btn-outline-primary">Voir tous les biens</a>
+    </div>
+</div>
+
+</div>

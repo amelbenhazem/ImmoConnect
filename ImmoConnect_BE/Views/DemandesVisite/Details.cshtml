@@ -1,0 +1,45 @@
+@model ImmoConnect_BE.Models.DemandeVisite
+
+@{
+    ViewData["Title"] = "Détails de la demande de visite";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Détails de la demande de visite</h2>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Nom du client</dt>
+                <dd class="col-sm-9">@Model.Nom_client</dd>
+
+                <dt class="col-sm-3">Email du client</dt>
+                <dd class="col-sm-9">@Model.Email_client</dd>
+
+                <dt class="col-sm-3">Bien immobilier</dt>
+                <dd class="col-sm-9">
+                    <a asp-controller="BiensImmobiliers" asp-action="Details" asp-route-id="@Model.BienImmobilier.Id_bien">
+                        @Model.BienImmobilier.Titre
+                    </a>
+                </dd>
+
+                <dt class="col-sm-3">Date souhaitée</dt>
+                <dd class="col-sm-9">@Model.Date_souhaitee.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3">Date de demande</dt>
+                <dd class="col-sm-9">@Model.Date_demande.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt class="col-sm-3">Message</dt>
+                <dd class="col-sm-9">@Model.Message</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group">
+                <a asp-action="Edit" asp-route-id="@Model.Id_demande" class="btn btn-warning">Modifier</a>
+                <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id_demande" class="btn btn-danger">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div> 

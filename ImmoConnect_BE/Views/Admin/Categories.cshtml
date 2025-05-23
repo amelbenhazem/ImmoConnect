@@ -1,0 +1,88 @@
+@model IEnumerable<ImmoConnect_BE.Models.Categorie>
+
+@{
+    ViewData["Title"] = "Gestion des catégories";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestion des catégories</h1>
+        <a asp-controller="Categories" asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouvelle catégorie
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Nombre de biens</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td>@category.Nom</td>
+                                <td>@category.BiensImmobiliers?.Count</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id_categorie" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal@(category.Id_categorie)">
+                                            <i class="fas fa-trash"></i> Supprimer
+                                        </button>
+                                    </div>
+
+                                    <!-- Modal de confirmation de suppression -->
+                                    <div class="modal fade" id="deleteModal@(category.Id_categorie)" tabindex="-1" aria-labelledby="deleteModalLabel@(category.Id_categorie)" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel@(category.Id_categorie)">Confirmer la suppression</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Êtes-vous sûr de vouloir supprimer la catégorie @category.Nom ?
+                                                    @if (category.BiensImmobiliers?.Count > 0)
+                                                    {
+                                                        <div class="alert alert-warning mt-2">
+                                                            Attention : Cette catégorie contient @category.BiensImmobiliers.Count biens immobiliers.
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <form asp-action="DeleteCategory" asp-route-id="@category.Id_categorie" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Activer les tooltips Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+} 

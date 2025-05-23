@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ImmoConnect</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* Ajoutez la bibliothèque d'icônes Font Awesome si vous l'utilisez dans vos vues (par exemple, pour les icônes + ou trash) *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <style>
+        .nav-link {
+        transition: color 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+        color: #007bff !important; /* Exemple de couleur au survol, ajustez si nécessaire */
+        /* Ajoutez d'autres effets d'animation si souhaité, par exemple: transform: scale(1.05); */
+        }
+
+        .navbar-brand {
+        transition: transform 0.3s ease-in-out;
+        }
+
+        .navbar-brand:hover {
+        transform: rotate(5deg); /* Exemple d'animation pour le logo */
+        }
+
+        /* Style pour afficher le nom complet */
+        .navbar-nav .nav-item .nav-link.user-greeting {
+        font-weight: bold;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">ImmoConnect</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="BiensImmobiliers" asp-action="Index">Biens</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @* 
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="BiensImmobiliers" asp-action="Index">Biens immobiliers</a>
+                            </li>
+                            *@
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Administration</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var firstName = User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value;
+                            var lastName = User.FindFirst(System.Security.Claims.ClaimTypes.Surname)?.Value;
+                            
+                            // Construct the full name string
+                            var userName = "";
+                            if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+                            {
+                                userName = $"{firstName} {lastName}";
+                            }
+                            else if (!string.IsNullOrEmpty(firstName))
+                            {
+                                userName = firstName;
+                            }
+                            else if (!string.IsNullOrEmpty(lastName))
+                            {
+                                userName = lastName;
+                            }
+                            else
+                            {
+                                userName = User.Identity.Name; // Fallback to email if names are not available
+                            }
+
+                            <li class="nav-item">
+                                <span class="nav-link text-dark user-greeting">Bonjour, @userName</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="SignOut" method="post" class="form-inline">
+                                    <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="SignIn">Connexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark btn btn-success text-white" asp-controller="Account" asp-action="SignUp">Inscription</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - ImmoConnect 
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
