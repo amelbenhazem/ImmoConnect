@@ -1,0 +1,35 @@
+@model ImmoConnect_BE.Models.Categorie
+
+@{
+    ViewData["Title"] = "Supprimer la catégorie";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Supprimer la catégorie</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="text-danger">Êtes-vous sûr de vouloir supprimer cette catégorie ?</h4>
+            @if (Model.BiensImmobiliers?.Count > 0)
+            {
+                <div class="alert alert-warning">
+                    Cette catégorie contient @Model.BiensImmobiliers.Count bien(s). La suppression peut échouer s'ils y sont encore liés.
+                </div>
+            }
+            <dl class="row">
+                <dt class="col-sm-3">Nom</dt>
+                <dd class="col-sm-9">@Model.Nom</dd>
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@(Model.Description ?? "—")</dd>
+            </dl>
+            <form asp-action="Delete" asp-route-id="@Model.Id_categorie">
+                <input type="hidden" asp-for="Id_categorie" />
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

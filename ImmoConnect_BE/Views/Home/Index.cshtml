@@ -98,12 +98,18 @@
         <h1 class="display-4">Trouvez le bien immobilier de vos rêves</h1>
         <p class="lead">Des milliers de biens à vendre et à louer partout</p>
         <div class="container search-bar-container">
-            <form asp-controller="BiensImmobiliers" asp-action="Index" method="get">
+            <form asp-controller="BiensImmobiliers" asp-action="IndexA" method="get">
                 <div class="row g-2">
                     <div class="col-md-3">
-                        <select name="category" class="form-select">
+                        <select name="categorieId" class="form-select">
                             <option value="">Tous les types</option>
-                            @* Ajoutez ici les options de catégorie si nécessaire, potentiellement depuis ViewBag *@
+                            @if (ViewBag.Categories is IEnumerable<Categorie> categories)
+                            {
+                                foreach (var categorie in categories)
+                                {
+                                    <option value="@categorie.Id_categorie">@categorie.Nom</option>
+                                }
+                            }
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -183,7 +189,7 @@
                     <div class="card-footer">
                         <div class="btn-group w-100">
                             <a asp-controller="BiensImmobiliers" asp-action="Details" asp-route-id="@item.Id_bien" class="btn btn-sm btn-info">Détails</a>
-                            @if (User.Identity.IsAuthenticated && (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == item.Id_utilisateur.ToString() || User.IsInRole("Admin")))
+                            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == item.Id_utilisateur.ToString()))
                             {
                                 <a asp-controller="BiensImmobiliers" asp-action="Edit" asp-route-id="@item.Id_bien" class="btn btn-sm btn-warning">Modifier</a>
                                 <a asp-controller="BiensImmobiliers" asp-action="Delete" asp-route-id="@item.Id_bien" class="btn btn-sm btn-danger">Supprimer</a>

@@ -1,12 +1,7 @@
 using ImmoConnect_BE.Data;
 using ImmoConnect_BE.Repositories;
 using ImmoConnect_BE.Services;
-using ImmoConnect_BE.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,10 +28,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
-// Add Password Hasher
-builder.Services.AddScoped<IPasswordHasher<Utilisateur>, PasswordHasher<Utilisateur>>();
-
-// Add Auth Service
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllersWithViews(); // Ajout du support MVC
@@ -79,7 +70,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=SignIn}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Seed the database
 using (var scope = app.Services.CreateScope())
@@ -87,6 +78,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
+        var db = services.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
         SeedData.Initialize(services);
     }
     catch (Exception ex)

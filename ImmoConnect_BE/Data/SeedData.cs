@@ -15,7 +15,8 @@ namespace ImmoConnect_BE.Data
                 // Vérifier si des catégories existent déjà
                 if (context.Categories.Any())
                 {
-                    return; // La base de données a déjà été initialisée
+                    EnsureDemoPasswords(context);
+                    return;
                 }
 
                 // Ajouter des catégories
@@ -59,8 +60,8 @@ namespace ImmoConnect_BE.Data
                         Description = "Magnifique appartement de 80m² au centre-ville",
                         Prix = 250000,
                         Adresse = "123 Rue du Commerce, 75001 Paris",
-                        Image_url = "https://example.com/appart1.jpg",
-                        Statut = "à vendre",
+                        Image_url = "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
+                        Statut = "Disponible",
                         Date_ajout = DateTime.Now,
                         Id_categorie = 1,
                         Id_utilisateur = agentUser.Id
@@ -71,14 +72,41 @@ namespace ImmoConnect_BE.Data
                         Description = "Belle maison de 150m² avec jardin de 500m²",
                         Prix = 450000,
                         Adresse = "45 Avenue des Fleurs, 75016 Paris",
-                        Image_url = "https://example.com/maison1.jpg",
-                        Statut = "à vendre",
+                        Image_url = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800",
+                        Statut = "Disponible",
                         Date_ajout = DateTime.Now,
                         Id_categorie = 2,
                         Id_utilisateur = agentUser.Id
                     }
                 );
 
+                context.SaveChanges();
+            }
+        }
+
+        private static void EnsureDemoPasswords(ApplicationDbContext context)
+        {
+            var demos = new Dictionary<string, string>
+            {
+                ["admin@immoconnect.com"] = "Admin123!",
+                ["agent@immoconnect.com"] = "Agent123!"
+            };
+
+            var updated = false;
+            foreach (var (email, password) in demos)
+            {
+                var user = context.Utilisateurs.FirstOrDefault(u => u.Email == email);
+                if (user == null) continue;
+
+                var hash = user.Mot_De_Passe ?? string.Empty;
+                if (hash.StartsWith("$2")) continue;
+
+                user.Mot_De_Passe = BCrypt.Net.BCrypt.HashPassword(password);
+                updated = true;
+            }
+
+            if (updated)
+            {
                 context.SaveChanges();
             }
         }

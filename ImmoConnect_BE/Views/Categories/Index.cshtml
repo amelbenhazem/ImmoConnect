@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                        <form asp-action="DeleteConfirmed" asp-route-id="@item.Id_categorie" method="post">
+                                        <form asp-action="Delete" asp-route-id="@item.Id_categorie" method="post">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-danger">Supprimer</button>
                                         </form>

@@ -69,7 +69,7 @@
                 </dd>
             </dl>
 
-            <form asp-action="DeleteConfirmed">
+            <form asp-action="Delete" asp-route-id="@Model.Id_bien">
                 <input type="hidden" asp-for="Id_bien" />
                 <div class="btn-group">
                      <input type="submit" value="Supprimer" class="btn btn-danger" />

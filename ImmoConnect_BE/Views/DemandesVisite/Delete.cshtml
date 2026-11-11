@@ -34,7 +34,7 @@
                 <dd class="col-sm-9">@Model.Message</dd>
             </dl>
 
-            <form asp-action="Delete">
+            <form asp-action="Delete" asp-route-id="@Model.Id_demande">
                 <input type="hidden" asp-for="Id_demande" />
                 <div class="btn-group">
                     <button type="submit" class="btn btn-danger">Supprimer</button>

@@ -33,7 +33,6 @@ namespace ImmoConnect_BE.Models
         [Required(ErrorMessage = "La catégorie est obligatoire")]
         public int Id_categorie { get; set; }
 
-        [Required(ErrorMessage = "L'utilisateur est obligatoire")]
         public int Id_utilisateur { get; set; }
 
         // Navigation properties

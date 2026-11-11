@@ -1,8 +1,6 @@
 using ImmoConnect_BE.Data;
 using ImmoConnect_BE.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ImmoConnect_BE.Controllers
@@ -19,12 +17,12 @@ namespace ImmoConnect_BE.Controllers
         }
 
 
-        [Authorize]
         public IActionResult Index()
         {
-             var biens = _context.BiensImmobiliers
-            .OrderByDescending(b => b.Date_ajout)
-            .ToList();
+            ViewBag.Categories = _context.Categories.ToList();
+            var biens = _context.BiensImmobiliers
+                .OrderByDescending(b => b.Date_ajout)
+                .ToList();
 
             return View(biens);
         }

@@ -1,8 +1,6 @@
 ﻿using ImmoConnect_BE.Data;
 using ImmoConnect_BE.Models;
 using Microsoft.EntityFrameworkCore;
-using ImmoConnect_BE.Data;
-using ImmoConnect_BE.Models;
 
 namespace ImmoConnect_BE.Repositories
 {

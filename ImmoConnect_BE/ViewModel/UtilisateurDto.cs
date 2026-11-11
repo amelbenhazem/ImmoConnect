@@ -17,7 +17,7 @@ namespace ImmoConnect_BE.ViewModels
         [Required]
         public string Mot_De_Passe { get; set; }
 
-        public Role Role { get; set; } = Role.Admin;
+        public Role Role { get; set; } = Role.Client;
     }
 }
 

@@ -48,15 +48,16 @@
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="BiensImmobiliers" asp-action="Index">Biens</a>
+                            <a class="nav-link text-dark" asp-controller="BiensImmobiliers" asp-action="IndexA">Biens</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @* 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="BiensImmobiliers" asp-action="Index">Biens immobiliers</a>
+                                <a class="nav-link text-dark" asp-controller="BiensImmobiliers" asp-action="Index">Mes biens</a>
                             </li>
-                            *@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="DemandesVisite" asp-action="Index">Visites</a>
+                            </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">

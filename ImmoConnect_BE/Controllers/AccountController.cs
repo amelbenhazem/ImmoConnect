@@ -25,6 +25,7 @@ namespace ImmoConnect_BE.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignIn(SignInViewModel model)
         {
             if (ModelState.IsValid)
@@ -50,6 +51,7 @@ namespace ImmoConnect_BE.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUp(SignUpViewModel model)
         {
             if (ModelState.IsValid)
@@ -67,7 +69,13 @@ namespace ImmoConnect_BE.Controllers
             return View(model);
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignOut()
         {
             await _authService.SignOutAsync();

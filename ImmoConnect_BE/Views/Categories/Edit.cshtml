@@ -1,0 +1,37 @@
+@model ImmoConnect_BE.Models.Categorie
+
+@{
+    ViewData["Title"] = "Modifier la catégorie";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Modifier la catégorie</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="Id_categorie" />
+                <div class="mb-3">
+                    <label asp-for="Nom" class="form-label">Nom</label>
+                    <input asp-for="Nom" class="form-control" />
+                    <span asp-validation-for="Nom" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="btn-group">
+                    <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

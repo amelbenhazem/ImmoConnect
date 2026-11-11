@@ -1,0 +1,27 @@
+@model ImmoConnect_BE.Models.Categorie
+
+@{
+    ViewData["Title"] = "Détails de la catégorie";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Détails de la catégorie</h2>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Nom</dt>
+                <dd class="col-sm-9">@Model.Nom</dd>
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@(Model.Description ?? "—")</dd>
+                <dt class="col-sm-3">Nombre de biens</dt>
+                <dd class="col-sm-9">@(Model.BiensImmobiliers?.Count ?? 0)</dd>
+            </dl>
+            <div class="btn-group">
+                <a asp-action="Edit" asp-route-id="@Model.Id_categorie" class="btn btn-primary">Modifier</a>
+                <a asp-action="Index" class="btn btn-secondary">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,15 @@
-﻿using ImmoConnect_BE.Models;
-using ImmoConnect_BE.ViewModels;
+﻿using ImmoConnect_BE.Helpers;
 using ImmoConnect_BE.ViewModel;
+using ImmoConnect_BE.ViewModels;
 
 namespace ImmoConnect_BE.Services
 {
     public interface ICompteService
     {
-        Task<Utilisateur> RegisterAsync(UtilisateurDto utilisateurDto);
-        Task<Utilisateur> LoginAsync(LoginDto loginDto);
-        Task<Utilisateur> UpdateUtilisateurAsync(int id, UtilisateurDto dto);
-        Task<List<Utilisateur>> ObtenirTousAsync();
-        Task<Utilisateur> ObtenirParIdAsync(int id);
+        Task<UtilisateurResponseDto> RegisterAsync(UtilisateurDto utilisateurDto);
+        Task<UtilisateurResponseDto> LoginAsync(LoginDto loginDto);
+        Task<UtilisateurResponseDto> UpdateUtilisateurAsync(int id, UtilisateurDto dto);
+        Task<List<UtilisateurResponseDto>> ObtenirTousAsync();
+        Task<UtilisateurResponseDto?> ObtenirParIdAsync(int id);
     }
 }

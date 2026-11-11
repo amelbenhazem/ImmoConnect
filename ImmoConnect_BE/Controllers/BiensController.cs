@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ImmoConnect_BE.Data;
 using ImmoConnect_BE.Models;
 using ImmoConnect_BE.ViewModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ImmoConnect_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BiensController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -21,6 +20,7 @@ namespace ImmoConnect_BE.Controllers
         }
 
         // GET: api/Biens
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BienDetailsDto>>> GetBiens()
         {
@@ -48,6 +48,7 @@ namespace ImmoConnect_BE.Controllers
         }
 
         // GET: api/Biens/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<BienDetailsDto>> GetBien(int id)
         {

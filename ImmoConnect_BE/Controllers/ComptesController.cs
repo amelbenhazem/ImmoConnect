@@ -1,14 +1,14 @@
-﻿
-using ImmoConnect_BE.Services;
+﻿using ImmoConnect_BE.Services;
 using ImmoConnect_BE.ViewModel;
 using ImmoConnect_BE.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace ImmoConnect_BE.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ComptesController : ControllerBase
     {
         private readonly ICompteService _compteService;
@@ -18,6 +18,7 @@ namespace ImmoConnect_BE.Controllers
             _compteService = compteService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UtilisateurDto utilisateurDto)
         {
@@ -34,6 +35,7 @@ namespace ImmoConnect_BE.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
@@ -50,6 +52,7 @@ namespace ImmoConnect_BE.Controllers
                 return Unauthorized(new { message = ex.Message });
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UtilisateurDto dto)
         {
@@ -66,12 +69,14 @@ namespace ImmoConnect_BE.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _compteService.ObtenirTousAsync());
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

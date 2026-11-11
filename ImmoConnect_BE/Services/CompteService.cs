@@ -1,9 +1,7 @@
-﻿using ImmoConnect_BE.Models;
+﻿using ImmoConnect_BE.Helpers;
 using ImmoConnect_BE.Models;
 using ImmoConnect_BE.Repositories;
-using ImmoConnect_BE.Repositories;
 using ImmoConnect_BE.ViewModel;
-using ImmoConnect_BE.ViewModels;
 using ImmoConnect_BE.ViewModels;
 
 namespace ImmoConnect_BE.Services
@@ -17,7 +15,7 @@ namespace ImmoConnect_BE.Services
             _repo = repo;
         }
 
-        public async Task<Utilisateur> RegisterAsync(UtilisateurDto dto)
+        public async Task<UtilisateurResponseDto> RegisterAsync(UtilisateurDto dto)
         {
             var existingUser = await _repo.ObtenirParEmailAsync(dto.Email);
             if (existingUser != null)
@@ -28,23 +26,26 @@ namespace ImmoConnect_BE.Services
                 Nom = dto.Nom,
                 Prenom = dto.Prenom,
                 Email = dto.Email,
-                Mot_De_Passe = dto.Mot_De_Passe, // 🔐 À chiffrer avec BCrypt idéalement
-                Role = dto.Role
+                Mot_De_Passe = PasswordHelper.Hash(dto.Mot_De_Passe),
+                Role = Role.Client
             };
 
-            return await _repo.AjouterAsync(utilisateur);
+            var created = await _repo.AjouterAsync(utilisateur);
+            return PasswordHelper.ToPublic(created);
         }
-        public async Task<Utilisateur> LoginAsync(LoginDto dto)
+
+        public async Task<UtilisateurResponseDto> LoginAsync(LoginDto dto)
         {
             var utilisateur = await _repo.ObtenirParEmailAsync(dto.Email);
-            if (utilisateur == null || utilisateur.Mot_De_Passe != dto.Mot_De_Passe)
+            if (utilisateur == null || !PasswordHelper.Verify(dto.Mot_De_Passe, utilisateur.Mot_De_Passe))
             {
                 throw new Exception("Email ou mot de passe incorrect.");
             }
 
-            return utilisateur;
+            return PasswordHelper.ToPublic(utilisateur);
         }
-        public async Task<Utilisateur> UpdateUtilisateurAsync(int id, UtilisateurDto dto)
+
+        public async Task<UtilisateurResponseDto> UpdateUtilisateurAsync(int id, UtilisateurDto dto)
         {
             var utilisateur = await _repo.ObtenirParIdAsync(id);
             if (utilisateur == null)
@@ -53,22 +54,25 @@ namespace ImmoConnect_BE.Services
             utilisateur.Nom = dto.Nom;
             utilisateur.Prenom = dto.Prenom;
             utilisateur.Email = dto.Email;
-            utilisateur.Mot_De_Passe = dto.Mot_De_Passe;
-            utilisateur.Role = dto.Role;
+            if (!string.IsNullOrWhiteSpace(dto.Mot_De_Passe))
+            {
+                utilisateur.Mot_De_Passe = PasswordHelper.Hash(dto.Mot_De_Passe);
+            }
 
-            return await _repo.MettreAJourAsync(utilisateur);
+            var updated = await _repo.MettreAJourAsync(utilisateur);
+            return PasswordHelper.ToPublic(updated);
         }
-        public async Task<List<Utilisateur>> ObtenirTousAsync()
+
+        public async Task<List<UtilisateurResponseDto>> ObtenirTousAsync()
         {
-            return await _repo.ObtenirTousAsync();
+            var users = await _repo.ObtenirTousAsync();
+            return users.Select(PasswordHelper.ToPublic).ToList();
         }
 
-        public async Task<Utilisateur> ObtenirParIdAsync(int id)
+        public async Task<UtilisateurResponseDto?> ObtenirParIdAsync(int id)
         {
-            return await _repo.ObtenirParIdAsync(id);
+            var user = await _repo.ObtenirParIdAsync(id);
+            return user == null ? null : PasswordHelper.ToPublic(user);
         }
-
-
     }
 }
-
